@@ -27,19 +27,101 @@
             <v-icon icon="mdi-bell-outline"></v-icon>
           </v-badge>
         </v-bt>
-        <v-avatar>
-          <v-img 
-            cover
-            src="https://gratisography.com/wp-content/uploads/2019/01/gratisography-nerdtastic-free-stock-photo.jpg"
-          >
-        </v-img>
-       </v-avatar>
+        <v-menu>
+          <template #activator="{ props }">
+            <v-avatar v-bind="props">
+              <v-img 
+                cover
+                src="https://gratisography.com/wp-content/uploads/2019/01/gratisography-nerdtastic-free-stock-photo.jpg"
+              >
+            </v-img>
+           </v-avatar>
+          </template>
+
+         <v-card min-width="200px">
+          <v-list :lines="false" density="compact" nav>
+            <v-list-item prepend-icon="mdi-account-outline">
+              <v-list-item-title>Meu perfil</v-list-item-title>
+            </v-list-item>
+            <v-list-item prepend-icon="mdi-heart-outline">
+              <v-list-item-title>Favoritos</v-list-item-title>
+            </v-list-item>
+          </v-list>
+         </v-card>
+        </v-menu>
       </template>
     </v-app-bar>
 
     <v-main>
       <v-container>
-        <h1>Dashboard</h1>
+        <h1 class="mb-5">Dashboard</h1>
+
+        <v-card flat class="border mb-4">
+          <div class="d-flex justify-space-between">
+            <v-card-title>Últimos usuários</v-card-title>
+            <v-card-title>
+              <v-btn @click="isDialog = true" variant="tonal" size="small">Adicionar usuário</v-btn>
+              <v-dialog
+                v-model="isDialog" 
+                width="600px"
+              >
+                <v-card>
+                  <v-card-title>Adicionar Usuário</v-card-title>
+                  <v-card-text>
+                    <v-row>
+                      <v-col>
+                        <v-text-field label="Nome" variant="outlined"></v-text-field>
+                      </v-col>
+                      <v-col>
+                        <v-text-field label="E-mail" variant="outlined" :rules="emailRules"></v-text-field>
+                      </v-col>
+                    </v-row>
+
+                    <v-select 
+                      label="Cargo" 
+                      variant="outlined"
+                      :items="['Admin', 'Gerente', 'Convidado']"
+                    >
+                    </v-select>
+                  </v-card-text>
+
+                  <v-card-actions> <v-spacer></v-spacer>
+                    <v-btn variant="text" @click="isDialog = !isDialog">Cancelar</v-btn>
+                    <v-btn variant="tonal" color="success">Salvar</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-card-title>
+          </div>
+          <v-table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Cargo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fulano</td>
+                <td>fulano@gmail.com</td>
+                <td>Admin</td>
+                <td>
+                  <v-btn variant="tonal" color="primary" >Editar</v-btn>
+                </td>
+              </tr>
+              <tr>
+                <td>teste 2</td>
+                <td>teste@gmail.com</td>
+                <td>Admin2</td>
+                <td>
+                  <v-btn variant="tonal" color="primary" >Editar</v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-card>
 
         <v-row>
           <v-col cols="12" sm="6" md="4" lg="3">
@@ -156,5 +238,23 @@
 import {ref} from 'vue';
 
 const isDrawerOpen = ref(false);
+const isDialog = ref(false);
+
+const emailRules = [
+  value => {
+    if(value) {
+      return true;
+    }
+
+    return 'O email é obrigatório';
+  },
+  value => {
+    if(value.includes('@')) {
+      return true;
+    }
+
+    return 'Email inválido'
+  }
+]
 
 </script>
